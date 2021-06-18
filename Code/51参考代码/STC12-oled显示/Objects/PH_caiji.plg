@@ -1,0 +1,28 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\Administrator\Desktop\【智男电子】PH传感器模块资料 V2.0\【智男电子】PH传感器模块资料 V2.0\Code\51参考代码\STC12-oled显示\PH_caiji.uvproj
+Project File Date:  06/02/2019
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+compiling oled.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS_AD?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY1?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?OLED_DISPLAY_ON?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?OLED_DISPLAY_OFF?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_OLED_SHOWNUM?OLED
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_OLED_DRAWBMP?OLED
+Program Size: data=78.0 xdata=0 code=5277
+creating hex file from ".\Objects\PH_caiji"...
+".\Objects\PH_caiji" - 0 Error(s), 6 Warning(s).

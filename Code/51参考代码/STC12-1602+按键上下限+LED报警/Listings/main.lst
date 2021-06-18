@@ -1,0 +1,327 @@
+C51 COMPILER V9.00   MAIN                                                                  03/11/2021 20:27:17 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\Keil\C51\BIN\C51.EXE User\main.c BROWSE INCDIR(.\User) DEBUG OBJECTEXTEND PRINT(.\Listings\main.
+                    -lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /********************(C) COPRIGHT 2019 Crownto electronic **************************
+   2           * 文件名  ：main.c
+   3           * 描述    ：        
+   4           * 硬件连接：
+   5           * LCD1602:RS -> P2.5; RW -> P2.6; E -> P2.7;
+   6           *         D0~D7 -> P0口
+   7           * PH模块: VCC -> 5V; GND -> GND; PO -> P1.1;
+   8           * 按键:   key1 -> P2.0; key2 -> P2.1; key3 -> P2.2;
+   9           * LED：   LED -> P1.4
+  10           * 功能描述：测量PH值液晶显示；
+  11                       按键设定PH值上下限值，超过设定范围指示灯亮进行报警
+  12                       串口接收测量所得的PH值（波特率9600）；
+  13           *           可连接上位机显示PH值；
+  14           * 作者    ：智男电子
+  15          **********************************************************************************/
+  16          #include <STC12C5A60S2.h>
+  17          #include <intrins.h>
+  18          #include <lcd.h>
+  19          
+  20          
+  21          #define uchar   unsigned char
+  22          #define uint    unsigned int
+  23          
+  24          #define MAIN_Fosc               11059200L       //定义主时钟, 模拟串口和和延时会自动适应。5~35MHZ  22118400L 
+  25           
+  26          #define ADC_OFF()       ADC_CONTR = 0
+  27          #define ADC_ON          (1 << 7)
+  28          #define ADC_90T         (3 << 5)
+  29          #define ADC_180T        (2 << 5)
+  30          #define ADC_360T        (1 << 5)
+  31          #define ADC_540T        0
+  32          #define ADC_FLAG        (1 << 4)        //软件清0
+  33          #define ADC_START       (1 << 3)        //自动清0
+  34          #define ADC_CH0         0
+  35          #define ADC_CH1         1
+  36          #define ADC_CH2         2
+  37          #define ADC_CH3         3
+  38          #define ADC_CH4         4
+  39          #define ADC_CH5         5
+  40          #define ADC_CH6         6
+  41          #define ADC_CH7         7
+  42          
+  43          sbit k1 = P2^0;
+  44          sbit k2 = P2^1;
+  45          sbit k3 = P2^2;
+  46          sbit ph_led = P1^4;
+  47          
+  48          
+  49          /**************变量定义***************************/
+  50          float PH=0.0;
+  51          float PH_value=0.0;
+  52          float ph_set1=0.0;
+  53          float ph_set2=0.0;
+  54          unsigned char disbuff[5]={0}; 
+C51 COMPILER V9.00   MAIN                                                                  03/11/2021 20:27:17 PAGE 2   
+
+  55          
+  56          
+  57          void  DelayUs(unsigned int time);   //延时子函数
+  58          void  Delay1(unsigned int time);                 //延时主程序
+  59          void  press_k1();
+  60          void  press_k2();
+  61          void  press_k3();
+  62          uint    adc10_start(uchar channel);     //channel = 0~7
+  63          int s1;
+  64          
+  65          
+  66          /*
+  67           * 函数名：PH_Value_Conversion
+  68           * 描述  ：获取PH模块输出电压值
+  69           *         
+  70           * 输入  ：无
+  71           * 输出  ：无
+  72           * 说明  ：
+  73           */
+  74          void PH_Value_Conversion()
+  75          {
+  76   1                      PH=(PH*5)/1024;
+  77   1                PH_value=-5.887*PH+21.677;
+  78   1              
+  79   1                if((PH_value<=0)){PH_value=0;}
+  80   1                      if((PH_value>14)){PH_value=14.1;}
+  81   1                      
+  82   1                      /*显示酸碱度*/
+  83   1                      disbuff[0]=(int)(PH_value*100)/1000+'0';
+  84   1                      disbuff[1]=(int)(PH_value*100)%1000/100+'0';    
+  85   1                      disbuff[2]='.';
+  86   1                      disbuff[3]=(int)(PH_value*100)%100/10+'0';
+  87   1                      disbuff[4]=(int)(PH_value*100)%10+'0';
+  88   1                      
+  89   1                      DisplaySingleChar(0x03,0,disbuff[0]);
+  90   1                      DisplaySingleChar(0x04,0,disbuff[1]);
+  91   1                      DisplaySingleChar(0x05,0,disbuff[2]);
+  92   1                      DisplaySingleChar(0x06,0,disbuff[3]);
+  93   1                      DisplaySingleChar(0x07,0,disbuff[4]);           
+  94   1      }
+  95          
+  96          /*
+  97           */
+  98          
+  99          void Display_PH1()
+ 100          {
+ 101   1              uint ph_h1, ph_h2,ph_h3,ph_h4;
+ 102   1              ph_h1 = (int)(ph_set1 * 100)/1000;
+ 103   1              ph_h2 = (int)(ph_set1 * 100)%1000/100;
+ 104   1              ph_h3 = (int)(ph_set1 * 100)%100/10;
+ 105   1              ph_h4 = (int)(ph_set1 * 100)%10;
+ 106   1              DisplaySingleChar(0x00,1,ph_h1+0x30);
+ 107   1        DisplaySingleChar(0x01,1,ph_h2+0x30);
+ 108   1              DisplaySingleChar(0x02,1,'.');
+ 109   1              DisplaySingleChar(0x03,1,ph_h3+0x30);
+ 110   1              DisplaySingleChar(0x04,1,ph_h4+0x30);   
+ 111   1      }
+ 112          void Display_PH2()
+ 113          {
+ 114   1              uint ph_h1, ph_h2,ph_h3,ph_h4;
+ 115   1              ph_h1 = (int)(ph_set2 * 100)/1000;
+ 116   1              ph_h2 = (int)(ph_set2 * 100)%1000/100;
+C51 COMPILER V9.00   MAIN                                                                  03/11/2021 20:27:17 PAGE 3   
+
+ 117   1              ph_h3 = (int)(ph_set2 * 100)%100/10;
+ 118   1              ph_h4 = (int)(ph_set2 * 100)%10;
+ 119   1              DisplaySingleChar(0x07,1,ph_h1+0x30);
+ 120   1        DisplaySingleChar(0x08,1,ph_h2+0x30);
+ 121   1              DisplaySingleChar(0x09,1,'.');
+ 122   1              DisplaySingleChar(0x0a,1,ph_h3+0x30);
+ 123   1              DisplaySingleChar(0x0b,1,ph_h4+0x30);   
+ 124   1      }
+ 125          /*
+ 126           * 函数名：main
+ 127           * 描述  ：主函数
+ 128           * 输入  ：无
+ 129           * 输出  ：无
+ 130           */
+ 131          void main(void)
+ 132          {
+ 133   1               
+ 134   1              LCDInit();                              //显示屏初始化
+ 135   1              DisplayString(0x0,0,"  Welcome...  ");
+ 136   1              DisplayString(0x0,1,"water quality");
+ 137   1              Delay1(500);
+ 138   1              WriteCmd(LCD_CLS);
+ 139   1              P1ASF = 0x07;                   //12C5A60AD/S2系列模拟输入(AD)选择
+ 140   1              ADC_CONTR = ADC_360T | ADC_ON;
+ 141   1              ph_set1 = 4.0;
+ 142   1              ph_set2 = 9.0;  
+ 143   1              DisplayString(0x0,0,"PH:");
+ 144   1              while(1)
+ 145   1              {
+ 146   2      
+ 147   2                      press_k1();
+ 148   2                      press_k2();
+ 149   2                      press_k3();
+ 150   2                      Display_PH1();
+ 151   2                      Display_PH2();
+ 152   2         //显示设置位置指示符
+ 153   2                      if (s1 == 0)
+ 154   2                      {
+ 155   3                              DisplayString(0x05,1,"*");
+ 156   3                              DisplayString(0x0c,1," ");
+ 157   3                      }
+ 158   2                      if (s1 == 1)
+ 159   2                      {
+ 160   3                              DisplayString(0x05,1," ");
+ 161   3                              DisplayString(0x0c,1,"*");
+ 162   3                      }
+ 163   2                      //PH采集转换
+ 164   2                      PH = adc10_start(1);
+ 165   2          Delay1(1000);               
+ 166   2                      PH_Value_Conversion();
+ 167   2                      //PH上下限判定
+ 168   2                      if(PH_value>ph_set1 && PH_value<ph_set2)
+ 169   2                      {
+ 170   3                              ph_led = 1; //指示灯灭
+ 171   3                      }
+ 172   2                      else
+ 173   2                      {
+ 174   3                              ph_led = 0;//指示灯亮
+ 175   3                      }
+ 176   2                                                      
+ 177   2              }
+ 178   1      }
+C51 COMPILER V9.00   MAIN                                                                  03/11/2021 20:27:17 PAGE 4   
+
+ 179                  
+ 180          
+ 181          ///********************* 做一次ADC转换 *******************/
+ 182          uint    adc10_start(uchar channel)      //channel = 0~7
+ 183          {
+ 184   1              uint    adc;
+ 185   1              uchar   i;
+ 186   1      
+ 187   1              ADC_RES = 0;
+ 188   1              ADC_RESL = 0;
+ 189   1      
+ 190   1              ADC_CONTR = (ADC_CONTR & 0xe0) | ADC_START | channel; 
+ 191   1      
+ 192   1              i = 250;
+ 193   1              do{
+ 194   2                      if(ADC_CONTR & ADC_FLAG)
+ 195   2                      {
+ 196   3                              ADC_CONTR &= ~ADC_FLAG;
+ 197   3                              adc = (uint)ADC_RES;
+ 198   3                              adc = (adc << 2) | (ADC_RESL & 3);
+ 199   3                              return  adc;
+ 200   3                      }
+ 201   2              }while(--i);
+ 202   1              return  1024;
+ 203   1      }
+ 204          
+ 205          
+ 206          //========================================================================
+ 207          // 描述: 键盘扫描。
+ 208          void press_k1()         //设置按键扫描子函数     
+ 209          {
+ 210   1              if (k1 == 0)
+ 211   1              {
+ 212   2                      Delay1(100);
+ 213   2                      if (k1 == 0)
+ 214   2                      {
+ 215   3                              s1++;
+ 216   3                              if (s1 == 2)
+ 217   3                              {
+ 218   4                                      s1 = 0 ;
+ 219   4                              }
+ 220   3                      }
+ 221   2              }
+ 222   1      }
+ 223          
+ 224          void press_k2()         //+按键扫描子函数
+ 225          {
+ 226   1       if (k2 == 0)
+ 227   1              {
+ 228   2               Delay1(100);
+ 229   2               if (k2 == 0)
+ 230   2                {
+ 231   3                 if (s1 == 0)
+ 232   3                  {
+ 233   4                                      ph_set1+=0.01;
+ 234   4                                      if(ph_set1 > 14.1)
+ 235   4                                      {
+ 236   5                                              ph_set1 = 4;
+ 237   5                                      }                                       
+ 238   4                              }
+ 239   3                       if (s1 == 1)
+ 240   3                              {
+C51 COMPILER V9.00   MAIN                                                                  03/11/2021 20:27:17 PAGE 5   
+
+ 241   4                                      ph_set2+=0.01;
+ 242   4                                      if(ph_set2 > 14.1)
+ 243   4                                      {
+ 244   5                                              ph_set2 = 9;
+ 245   5                                      }               
+ 246   4                              }
+ 247   3                      }
+ 248   2              }
+ 249   1      }
+ 250          
+ 251          void press_k3()         //-按键扫描子函数
+ 252          {
+ 253   1       if (k3 == 0)
+ 254   1              {
+ 255   2               Delay1(100);
+ 256   2               if (k3 == 0)
+ 257   2                {
+ 258   3                 if (s1 == 0)
+ 259   3                  {
+ 260   4                                      ph_set1-=0.01;
+ 261   4                                      if(ph_set1 <= 0)
+ 262   4                                      {
+ 263   5                                              ph_set1 = 4;
+ 264   5                                      }                               
+ 265   4                              }
+ 266   3                       if (s1 == 1)
+ 267   3                              {
+ 268   4                                      ph_set2-=0.01;
+ 269   4                                      if(ph_set2 <= 0)
+ 270   4                                      {
+ 271   5                                              ph_set2 = 9;
+ 272   5                                      }
+ 273   4                              }
+ 274   3                      }
+ 275   2              }
+ 276   1      }
+ 277          //延时函数//
+ 278          void Delay1(unsigned int time)
+ 279          {
+ 280   1          unsigned int timeCounter = 0;
+ 281   1              for (timeCounter = time;timeCounter > 0 ;timeCounter --)
+ 282   1                      DelayUs(255);
+ 283   1      }
+ 284          
+ 285          void DelayUs(unsigned int time)
+ 286          {
+ 287   1              unsigned int timeCounter = 0;
+ 288   1              for (timeCounter = 0;timeCounter < time;timeCounter ++)
+ 289   1                      _nop_();
+ 290   1      }
+ 291          
+ 292          
+ 293          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1583    ----
+   CONSTANT SIZE    =     37    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     23      27
+   IDATA SIZE       =   ----    ----
+C51 COMPILER V9.00   MAIN                                                                  03/11/2021 20:27:17 PAGE 6   
+
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

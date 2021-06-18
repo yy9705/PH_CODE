@@ -1,0 +1,160 @@
+C51 COMPILER V9.59.0.0   PH_CAIJI                                                          06/06/2020 10:25:59 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE PH_CAIJI
+OBJECT MODULE PLACED IN .\Objects\PH_caiji.obj
+COMPILER INVOKED BY: D:\Program Files (x86)\Keil\C51\BIN\C51.EXE user\PH_caiji.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\user)
+                    - DEBUG OBJECTEXTEND PRINT(.\Listings\PH_caiji.lst) TABS(2) OBJECT(.\Objects\PH_caiji.obj)
+
+line level    source
+
+   1          /********************(C) COPRIGHT 2019 Crownto electronic **************************
+   2           * 文件名  ：main.c
+   3           * 描述    ：        
+   4           * 硬件连接：
+   5           * PCF8591:VCC -> 5V; GND -> GND; SCL -> P1.6;SDA -> P1.7; 
+   6           *         OUT1~OUT8 -> P3口
+   7           * LCD1602:RS -> P2.5; RW -> P2.6; E -> P2.7;
+   8           *         D0~D7 -> P0口
+   9           * PH模块: VCC -> 5V; GND -> GND; PO -> AIN0;
+  10           *
+  11           * 功能描述：测量PH值液晶显示；
+  12                       串口接收测量所得的PH值（波特率9600）；
+  13           *           可连接上位机显示PH值；
+  14           * 作者    ：冠拓电子
+  15           * 淘宝    ：https://shop376667309.taobao.com
+  16           * 网址    ：www.crownto.cn
+  17          **********************************************************************************/
+  18          
+  19          #include <reg52.h>
+  20          #include <include.h>
+  21          
+  22          typedef unsigned char uchar;
+  23          typedef unsigned char uint;
+  24          
+  25          /**************外部变量定义************************/
+  26          int num=0; 
+  27          /**************变量定义***************************/
+  28          double PH=0.0;
+  29          unsigned char disbuff[5]={0};
+  30          double ADC_Voltage=0.0;
+  31          
+  32          
+  33          /*
+  34           * 函数名：Get_Voltage_Value
+  35           * 描述  ：获取PCF8591的转换电压值
+  36           *         
+  37           * 输入  ：无
+  38           * 输出  ：无
+  39           * 说明  ：
+  40           *            AIN0(0X40):热敏电阻
+  41           *            AIN1(0X41):悬空
+  42           *            AIN2(0X42):滑动变阻器
+  43           *            AIN3(0X43):光敏电阻
+  44           */
+  45          void Get_Voltage_Value()
+  46          {
+  47   1            ISendByte(PCF8591,0x40);
+  48   1            num=IRcvByte(PCF8591);  //ADC0 模数转换1      PH电极
+  49   1            ADC_Voltage =num * 5.0/ 255;  //转换为电压值
+  50   1      }
+  51          /*
+  52           * 函数名：Character_Conversion
+  53           * 描述  ：延时函数
+  54           *         
+C51 COMPILER V9.59.0.0   PH_CAIJI                                                          06/06/2020 10:25:59 PAGE 2   
+
+  55           * 输入  ：unsigned char n：延时量
+  56           * 输出  ：无
+  57           * 说明  ：
+  58           */
+  59          void PH_Value_Conversion()
+  60          { 
+  61   1        PH=-5.887*ADC_Voltage+21.677;
+  62   1        
+  63   1        if(PH<=0){PH=0;}
+  64   1        if(PH>=14){PH=14;}
+  65   1          
+  66   1         /*显示酸碱度*/
+  67   1        disbuff[0]=(int)(PH*100)/1000+'0';
+  68   1        disbuff[1]=(int)(PH*100)%1000/100+'0';  
+  69   1        disbuff[2]='.';
+  70   1        disbuff[3]=(int)(PH*100)%100/10+'0';
+  71   1        disbuff[4]=(int)(PH*100)%10+'0';
+  72   1        
+  73   1      }
+  74          void display_value()
+  75          {
+  76   1        
+  77   1        /*显示 PH 浓度值*/
+  78   1        DisplaySingleChar(0x3,0,disbuff[0]);
+  79   1        DisplaySingleChar(0x4,0,disbuff[1]);
+  80   1        DisplaySingleChar(0x5,0,disbuff[2]);
+  81   1        DisplaySingleChar(0x6,0,disbuff[3]);
+  82   1        DisplaySingleChar(0x7,0,disbuff[4]);
+  83   1      }
+  84          void StartUART( void )
+  85          {               //波特率9600
+  86   1           SCON = 0x50;
+  87   1           TMOD = 0x20;
+  88   1           TH1 = 0xFD;
+  89   1           TL1 = 0xFD; 
+  90   1           PCON = 0x00;
+  91   1           TR1 = 1;
+  92   1      }
+  93          //**********通过串口将接收到数据发送给PC端**************
+  94          void R_S_Byte(uchar R_Byte)
+  95          { 
+  96   1         SBUF = R_Byte;  
+  97   1           while( TI == 0 );        //查询法
+  98   1           TI = 0;    
+  99   1      }
+ 100          /*
+ 101           * 函数名：main
+ 102           * 描述  ：主函数
+ 103           * 输入  ：无
+ 104           * 输出  ：无
+ 105           */
+ 106          void main(void)
+ 107          {
+ 108   1        int i;
+ 109   1        LCDInit();
+ 110   1        StartUART();
+ 111   1        
+ 112   1        DisplayString(0x0,0,"  Welcome  PH  ");
+ 113   1        DisplayString(0x0,1,"Detection system");
+ 114   1        delay_1s();
+ 115   1        WriteCmd(LCD_CLS);
+ 116   1        
+C51 COMPILER V9.59.0.0   PH_CAIJI                                                          06/06/2020 10:25:59 PAGE 3   
+
+ 117   1        DisplayString(0x0,0,"PH=");
+ 118   1        
+ 119   1        while(1)
+ 120   1        {   
+ 121   2              Get_Voltage_Value();
+ 122   2              PH_Value_Conversion();
+ 123   2              display_value(); 
+ 124   2            for(i=0;i<5;i++)
+ 125   2              {
+ 126   3                R_S_Byte(disbuff[i]);
+ 127   3              } 
+ 128   2      //        R_S_Byte('\r');//发送回车换行符
+ 129   2      //        R_S_Byte('\n');
+ 130   2              delay_1s();
+ 131   2        } 
+ 132   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    447    ----
+   CONSTANT SIZE    =     37    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     15    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

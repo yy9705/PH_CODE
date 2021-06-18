@@ -1,0 +1,855 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.20.2.41139 for 8051             13/May/2019  11:10:29 #
+# Copyright 2004-2013 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#                                                                             #
+#    Source file        =  E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigB #
+#                          eeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\Z #
+#                          Stack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Samples #
+#                          \SampleApp\Source\ds18b20.c                        #
+#    Command line       =  -f "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95. #
+#                          ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾ #
+#                          ¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sam #
+#                          ples\SampleApp\CC2530DB\..\..\..\Tools\CC2530DB\f8 #
+#                          wEndev.cfg" (-DCPU32MHZ -DROOT=__near_func         #
+#                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6         #
+#                          -DMAC_CFG_RX_MAX=3) -f "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ #
+#                          ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷ #
+#                          (AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a #
+#                          \Projects\zstack\Samples\SampleApp\CC2530DB\..\..\ #
+#                          ..\Tools\CC2530DB\f8wConfig.cfg" (-DZIGBEEPRO      #
+#                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR       #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFF1                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ #
+#                          ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷ #
+#                          (AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a #
+#                          \Projects\zstack\Samples\SampleApp\Source\ds18b20. #
+#                          c" -D NWK_AUTO_POLL -D ZTOOL_P1 -D MT_TASK -D      #
+#                          MT_SYS_FUNC -D MT_ZDO_FUNC -D LCD_SUPPORTED=DEBUG  #
+#                          -lC "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95 #
+#                          .ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨ #
+#                          ¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sa #
+#                          mples\SampleApp\CC2530DB\EndDeviceEB\List\" -lA    #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\EndDeviceEB\List\"            #
+#                          --diag_suppress Pe001,Pa010 -o                     #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\EndDeviceEB\Obj\" -e          #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95. #
+#                          ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾ #
+#                          ¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sam #
+#                          ples\SampleApp\CC2530DB\" -I                       #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\Source\" -I                #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\ZMain\TI2530DB\" -I  #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\..\..\Components\hal #
+#                          \include\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\ #
+#                          2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬ #
+#                          Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects #
+#                          \zstack\Samples\SampleApp\CC2530DB\..\..\..\..\..\ #
+#                          Components\hal\target\CC2530EB\" -I                #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\..\..\Components\mac #
+#                          \include\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\ #
+#                          2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬ #
+#                          Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects #
+#                          \zstack\Samples\SampleApp\CC2530DB\..\..\..\..\..\ #
+#                          Components\mac\high_level\" -I                     #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\..\..\Components\mac #
+#                          \low_level\srf04\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ· #
+#                          \2.¶¨ÖÆ\2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷( #
+#                          AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\ #
+#                          Projects\zstack\Samples\SampleApp\CC2530DB\..\..\. #
+#                          .\..\..\Components\mac\low_level\srf04\single_chip #
+#                          \" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\ #
+#                          95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø #
+#                          ±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\ #
+#                          Samples\SampleApp\CC2530DB\..\..\..\..\..\Componen #
+#                          ts\mt\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\201 #
+#                          9.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ #
+#                          ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zs #
+#                          tack\Samples\SampleApp\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\osal\include\" -I                          #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\..\..\Components\ser #
+#                          vices\saddr\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ #
+#                          ÖÆ\2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍD #
+#                          OÍ¬Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Proje #
+#                          cts\zstack\Samples\SampleApp\CC2530DB\..\..\..\..\ #
+#                          ..\Components\services\sdata\" -I                  #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\..\..\Components\sta #
+#                          ck\af\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\201 #
+#                          9.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ #
+#                          ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zs #
+#                          tack\Samples\SampleApp\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\stack\nwk\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ #
+#                          ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷ #
+#                          (AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a #
+#                          \Projects\zstack\Samples\SampleApp\CC2530DB\..\..\ #
+#                          ..\..\..\Components\stack\sapi\" -I                #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\..\..\Components\sta #
+#                          ck\sec\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\20 #
+#                          19.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê± #
+#                          ¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\z #
+#                          stack\Samples\SampleApp\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\stack\sys\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²ú #
+#                          Æ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ #
+#                          ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1 #
+#                          a\Projects\zstack\Samples\SampleApp\CC2530DB\..\.. #
+#                          \..\..\..\Components\stack\zdo\" -I                #
+#                          "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.Zig #
+#                          BeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ #
+#                          ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Sample #
+#                          s\SampleApp\CC2530DB\..\..\..\..\..\Components\zma #
+#                          c\" -I "E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ #
+#                          \95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ #
+#                          ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack #
+#                          \Samples\SampleApp\CC2530DB\..\..\..\..\..\Compone #
+#                          nts\zmac\f8w\" -Ohz                                #
+#    List file          =  E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigB #
+#                          eeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\Z #
+#                          Stack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Samples #
+#                          \SampleApp\CC2530DB\EndDeviceEB\List\ds18b20.lst   #
+#    Object file        =  E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigB #
+#                          eeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\Z #
+#                          Stack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Samples #
+#                          \SampleApp\CC2530DB\EndDeviceEB\Obj\ds18b20.r51    #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+E:\ÌÔ±¦µêÆÌ\ºñ±¡µç×Ó\1.²úÆ·\2.¶¨ÖÆ\2019.ÉÏ\95.ZigBeeË®ÖÊ(»´¹¤)\10.¹âÃô´«¸ÐÆ÷(AOºÍDOÍ¬Ê±¼ì²â´ø±¨¾¯)\ZStack-2.5.1a\ZStack-2.5.1a\Projects\zstack\Samples\SampleApp\Source\ds18b20.c
+      1          #include"iocc2530.h"
+
+   \                                 In  segment SFR_AN, at 0x80
+   \   union <unnamed> volatile __sfr _A_P0
+   \                     _A_P0:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xda
+   \   unsigned char volatile __sfr T1CC0L
+   \                     T1CC0L:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xdb
+   \   unsigned char volatile __sfr T1CC0H
+   \                     T1CC0H:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xe2
+   \   unsigned char volatile __sfr T1CNTL
+   \                     T1CNTL:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xe3
+   \   unsigned char volatile __sfr T1CNTH
+   \                     T1CNTH:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xe4
+   \   unsigned char volatile __sfr T1CTL
+   \                     T1CTL:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xfd
+   \   unsigned char volatile __sfr P0DIR
+   \                     P0DIR:
+   \   000000                DS 1
+      2          #include"OnBoard.h"
+      3          #include "ds18b20.h" 
+      4          
+      5          //ÒªÐÞ¸ÄµÄµØ·½
+      6          #define Ds18b20IO P0_7  //ÎÂ¶È´«¸ÐÆ÷Òý½Å
+      7          #define DATA_PIN_INPUT  (P0DIR &= ~0x80)
+      8          #define DATA_PIN_OUTPUT (P0DIR |= 0x80)
+      9          
+     10          
+     11          void Ds18b20Delay(unsigned int k);
+     12          void Ds18b20InputInitial(void);
+     13          void Ds18b20OutputInitial(void);
+     14          unsigned char Ds18b20Initial(void);
+     15          void Ds18b20Write(unsigned char infor);
+     16          unsigned char Ds18b20Read(void);
+     17          
+     18          //Ê±ÖÓÆµÂÊÎª32M
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     19          void Ds18b20Delay(unsigned int k)
+   \                     Ds18b20Delay:
+     20          { 
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+   \   000000   8009         SJMP    ??Ds18b20Delay_0
+     21            while (k--)
+     22            {
+     23              asm("NOP");
+   \                     ??Ds18b20Delay_1:
+   \   000002   00           NOP
+     24              asm("NOP");
+   \   000003   00           NOP
+     25              asm("NOP");
+   \   000004   00           NOP
+     26              asm("NOP");
+   \   000005   00           NOP
+     27              asm("NOP");
+   \   000006   00           NOP
+     28              asm("NOP");
+   \   000007   00           NOP
+     29              asm("NOP");
+   \   000008   00           NOP
+     30              asm("NOP");   
+   \   000009   00           NOP
+     31              asm("NOP");   
+   \   00000A   00           NOP
+     32            }
+   \                     ??Ds18b20Delay_0:
+   \   00000B   EA           MOV     A,R2
+   \   00000C   F8           MOV     R0,A
+   \   00000D   EB           MOV     A,R3
+   \   00000E   F9           MOV     R1,A
+   \   00000F   E8           MOV     A,R0
+   \   000010   24FF         ADD     A,#-0x1
+   \   000012   1A           DEC     R2
+   \   000013   E9           MOV     A,R1
+   \   000014   34FF         ADDC    A,#-0x1
+   \   000016   FB           MOV     R3,A
+   \   000017   E8           MOV     A,R0
+   \   000018   49           ORL     A,R1
+   \   000019   70E7         JNZ     ??Ds18b20Delay_1
+     33          
+     34          }
+   \   00001B   02....       LJMP    ?BRET
+     35          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     36          void Delay_us(unsigned int k)//usÑÓÊ±º¯Êý
+   \                     Delay_us:
+     37          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     38              T1CNTL=0;
+   \   000000   75E200       MOV     0xe2,#0x0
+     39              T1CNTH=0;
+   \   000003   75E300       MOV     0xe3,#0x0
+     40              T1CC0L = 32; 
+   \   000006   75DA20       MOV     0xda,#0x20
+     41              T1CC0H = 0x00; 
+   \   000009   75DB00       MOV     0xdb,#0x0
+     42              T1CTL = 0x02; //Ä££¬´Ó0x0000µ½T1CC0·´¸´¼ÆÊý¡£
+   \   00000C   75E402       MOV     0xe4,#0x2
+   \   00000F   800F         SJMP    ??Delay_us_0
+     43              while(k)
+     44              { 
+     45                  while(!(T1CNTL >= 25));//¶¨Ê±Æ÷µÄµÍ×Ö½Ú¼ÆÊý
+   \                     ??Delay_us_1:
+   \   000011   E5E2         MOV     A,0xe2
+   \   000013   C3           CLR     C
+   \   000014   9419         SUBB    A,#0x19
+   \   000016   40F9         JC      ??Delay_us_1
+     46                  k--;
+   \   000018   EA           MOV     A,R2
+   \   000019   24FF         ADD     A,#-0x1
+   \   00001B   1A           DEC     R2
+   \   00001C   EB           MOV     A,R3
+   \   00001D   34FF         ADDC    A,#-0x1
+   \   00001F   FB           MOV     R3,A
+     47              }
+   \                     ??Delay_us_0:
+   \   000020   EA           MOV     A,R2
+   \   000021   4B           ORL     A,R3
+   \   000022   70ED         JNZ     ??Delay_us_1
+     48              T1CTL = 0x00;  //¹Ø±Õ¶¨Ê±Æ÷
+   \   000024   75E400       MOV     0xe4,#0x0
+     49          }
+   \   000027   02....       LJMP    ?BRET
+   \   00002A                REQUIRE T1CNTL
+   \   00002A                REQUIRE T1CNTH
+   \   00002A                REQUIRE T1CC0L
+   \   00002A                REQUIRE T1CC0H
+   \   00002A                REQUIRE T1CTL
+     50          
+     51          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     52          void Ds18b20InputInitial(void)//ÉèÖÃ¶Ë¿ÚÎªÊäÈë
+   \                     Ds18b20InputInitial:
+     53          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     54              DATA_PIN_INPUT;
+   \   000000   53FD7F       ANL     0xfd,#0x7f
+     55          }
+   \   000003   02....       LJMP    ?BRET
+   \   000006                REQUIRE P0DIR
+     56          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     57          void Ds18b20OutputInitial(void)//ÉèÖÃ¶Ë¿ÚÎªÊä³ö
+   \                     Ds18b20OutputInitial:
+     58          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     59              DATA_PIN_OUTPUT;
+   \   000000   43FD80       ORL     0xfd,#0x80
+     60          }
+   \   000003   02....       LJMP    ?BRET
+   \   000006                REQUIRE P0DIR
+     61          
+     62          //ds18b20³õÊ¼»¯  ³õÊ¼»¯³É¹¦·µ»Ø0x00£¬Ê§°Ü·µ»Ø0x01
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     63          unsigned char Ds18b20Initial(void)
+   \                     Ds18b20Initial:
+     64          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 0
+     65              unsigned char Status = 0x00;
+   \   000005   75..00       MOV     ?V0 + 0,#0x0
+     66              unsigned int CONT_1 = 0;
+   \   000008   7E00         MOV     R6,#0x0
+   \   00000A   7F00         MOV     R7,#0x0
+     67              unsigned char Flag_1 = 1;
+   \   00000C   75..01       MOV     ?V0 + 1,#0x1
+     68              Ds18b20OutputInitial();
+   \   00000F   12....       LCALL   ?Subroutine1 & 0xFFFF
+     69              Ds18b20IO = 1;      //DQ¸´Î»
+     70              Delay_us(10);  //ÉÔ×öÑÓÊ±
+   \                     ??CrossCallReturnLabel_0:
+   \   000012   12....       LCALL   ??Delay_us?relay
+     71              Ds18b20IO = 0;      //µ¥Æ¬»ú½«DQÀ­µÍ
+   \   000015   C287         CLR     0x80.7
+     72              Delay_us(650);  //¾«È·ÑÓÊ± ´óÓÚ 480us Ð¡ÓÚ960us
+   \   000017                ; Setup parameters for call to function Delay_us
+   \   000017   7A8A         MOV     R2,#-0x76
+   \   000019   7B02         MOV     R3,#0x2
+   \   00001B   12....       LCALL   ??Delay_us?relay
+     73              Ds18b20IO = 1;      //À­¸ß×ÜÏß
+   \   00001E   D287         SETB    0x80.7
+     74              Ds18b20InputInitial();//ÉèÖÃIOÊäÈë
+   \   000020   53FD7F       ANL     0xfd,#0x7f
+   \   000023   8021         SJMP    ??Ds18b20Initial_0
+     75              while((Ds18b20IO != 0)&&(Flag_1 == 1))//µÈ´ýds18b20ÏìÓ¦£¬¾ßÓÐ·ÀÖ¹³¬Ê±¹¦ÄÜ
+     76              {                                      //µÈ´ýÔ¼60ms×óÓÒ
+     77                  CONT_1++;
+   \                     ??Ds18b20Initial_1:
+   \   000025   EE           MOV     A,R6
+   \   000026   2401         ADD     A,#0x1
+   \   000028   0E           INC     R6
+   \   000029   EF           MOV     A,R7
+   \   00002A   3400         ADDC    A,#0x0
+   \   00002C   FF           MOV     R7,A
+     78                  Delay_us(10);
+   \   00002D                ; Setup parameters for call to function Delay_us
+   \   00002D   7A0A         MOV     R2,#0xa
+   \   00002F   7B00         MOV     R3,#0x0
+   \   000031   12....       LCALL   ??Delay_us?relay
+     79                  if(CONT_1 > 8000)Flag_1 = 0;
+   \   000034   C3           CLR     C
+   \   000035   EE           MOV     A,R6
+   \   000036   9441         SUBB    A,#0x41
+   \   000038   EF           MOV     A,R7
+   \   000039   941F         SUBB    A,#0x1f
+   \   00003B   4003         JC      ??Ds18b20Initial_2
+   \   00003D   75..00       MOV     ?V0 + 1,#0x0
+     80                  Status = Ds18b20IO;
+   \                     ??Ds18b20Initial_2:
+   \   000040   A287         MOV     C,0x80.7
+   \   000042   E4           CLR     A
+   \   000043   33           RLC     A
+   \   000044   F5..         MOV     ?V0 + 0,A
+     81              }
+   \                     ??Ds18b20Initial_0:
+   \   000046   A287         MOV     C,0x80.7
+   \   000048   5006         JNC     ??Ds18b20Initial_3
+   \   00004A   E5..         MOV     A,?V0 + 1
+   \   00004C   A2E0         MOV     C,0xE0 /* A   */.0
+   \   00004E   40D5         JC      ??Ds18b20Initial_1
+     82              Ds18b20OutputInitial();
+   \                     ??Ds18b20Initial_3:
+   \   000050   43FD80       ORL     0xfd,#0x80
+     83              Ds18b20IO = 1;
+   \   000053   D287         SETB    0x80.7
+     84              Delay_us(100);
+   \   000055                ; Setup parameters for call to function Delay_us
+   \   000055   7A64         MOV     R2,#0x64
+   \   000057   7B00         MOV     R3,#0x0
+   \   000059   12....       LCALL   ??Delay_us?relay
+     85              return Status;       //·µ»Ø³õÊ¼»¯×´Ì¬
+   \   00005C   A9..         MOV     R1,?V0 + 0
+   \   00005E   7F02         MOV     R7,#0x2
+   \   000060   02....       LJMP    ?BANKED_LEAVE_XDATA
+   \   000063                REQUIRE _A_P0
+   \   000063                REQUIRE P0DIR
+     86          }
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine1:
+   \   000000   43FD80       ORL     0xfd,#0x80
+   \   000003   D287         SETB    0x80.7
+   \   000005                ; Setup parameters for call to function Delay_us
+   \   000005                ; Setup parameters for call to function Delay_us
+   \   000005   7A0A         MOV     R2,#0xa
+   \   000007   7B00         MOV     R3,#0x0
+   \   000009   22           RET
+     87          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     88          void Ds18b20Write(unsigned char infor)
+   \                     Ds18b20Write:
+     89          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   E9           MOV     A,R1
+   \   000006   FF           MOV     R7,A
+     90              unsigned int i;
+     91              Ds18b20OutputInitial();
+   \   000007   43FD80       ORL     0xfd,#0x80
+     92              for(i=0;i<8;i++)
+   \   00000A   7E08         MOV     R6,#0x8
+     93              {
+     94                  Ds18b20IO = 0;
+   \                     ??Ds18b20Write_0:
+   \   00000C   C287         CLR     0x80.7
+     95                  Delay_us(4);
+   \   00000E                ; Setup parameters for call to function Delay_us
+   \   00000E   7A04         MOV     R2,#0x4
+   \   000010   7B00         MOV     R3,#0x0
+   \   000012   12....       LCALL   ??Delay_us?relay
+     96                  if((infor & 0x01))
+   \   000015   EF           MOV     A,R7
+   \   000016   A2E0         MOV     C,0xE0 /* A   */.0
+   \   000018   5004         JNC     ??Ds18b20Write_1
+     97                  {
+     98                    Ds18b20IO = 1;
+   \   00001A   D287         SETB    0x80.7
+   \   00001C   8002         SJMP    ??Ds18b20Write_2
+     99                  }
+    100                  else
+    101                  {
+    102                    Ds18b20IO = 0;
+   \                     ??Ds18b20Write_1:
+   \   00001E   C287         CLR     0x80.7
+    103                  }
+    104                  Delay_us(59);
+   \                     ??Ds18b20Write_2:
+   \   000020                ; Setup parameters for call to function Delay_us
+   \   000020   7A3B         MOV     R2,#0x3b
+   \   000022   7B00         MOV     R3,#0x0
+   \   000024   12....       LCALL   ??Delay_us?relay
+    105                  Ds18b20IO = 1;
+   \   000027   D287         SETB    0x80.7
+    106                  Delay_us(4);
+   \   000029                ; Setup parameters for call to function Delay_us
+   \   000029   7A04         MOV     R2,#0x4
+   \   00002B   7B00         MOV     R3,#0x0
+   \   00002D   12....       LCALL   ??Delay_us?relay
+    107                  
+    108                  infor >>= 1;
+   \   000030   EF           MOV     A,R7
+   \   000031   C3           CLR     C
+   \   000032   13           RRC     A
+   \   000033   FF           MOV     R7,A
+    109              }
+   \   000034   1E           DEC     R6
+   \   000035   EE           MOV     A,R6
+   \   000036   70D4         JNZ     ??Ds18b20Write_0
+    110          }
+   \   000038   80..         SJMP    ??Subroutine2_0
+   \   00003A                REQUIRE _A_P0
+   \   00003A                REQUIRE P0DIR
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ??Subroutine2_0:
+   \   000000   7F01         MOV     R7,#0x1
+   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
+    111          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    112          unsigned char Ds18b20Read(void)
+   \                     Ds18b20Read:
+    113          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+    114              unsigned char Value = 0x00;
+   \   000005   7E00         MOV     R6,#0x0
+    115              unsigned int i;
+    116              Ds18b20OutputInitial();
+   \   000007   12....       LCALL   ?Subroutine1 & 0xFFFF
+    117              Ds18b20IO = 1;
+    118              Delay_us(10);
+   \                     ??CrossCallReturnLabel_1:
+   \   00000A   12....       LCALL   ??Delay_us?relay
+    119              for(i=0;i<8;i++)
+   \   00000D   7F08         MOV     R7,#0x8
+    120              {
+    121                  Value >>= 1; 
+   \                     ??Ds18b20Read_0:
+   \   00000F   EE           MOV     A,R6
+   \   000010   C3           CLR     C
+   \   000011   13           RRC     A
+   \   000012   FE           MOV     R6,A
+    122                  Ds18b20OutputInitial();
+   \   000013   43FD80       ORL     0xfd,#0x80
+    123                  Ds18b20IO = 0;// ¸øÂö³åÐÅºÅ
+   \   000016   C287         CLR     0x80.7
+    124                  Delay_us(3);
+   \   000018                ; Setup parameters for call to function Delay_us
+   \   000018   7A03         MOV     R2,#0x3
+   \   00001A   7B00         MOV     R3,#0x0
+   \   00001C   12....       LCALL   ??Delay_us?relay
+    125                  Ds18b20IO = 1;// ¸øÂö³åÐÅºÅ
+   \   00001F   D287         SETB    0x80.7
+    126                  Delay_us(3);
+   \   000021                ; Setup parameters for call to function Delay_us
+   \   000021   7A03         MOV     R2,#0x3
+   \   000023   7B00         MOV     R3,#0x0
+   \   000025   12....       LCALL   ??Delay_us?relay
+    127                  Ds18b20InputInitial();
+   \   000028   53FD7F       ANL     0xfd,#0x7f
+    128                  if(Ds18b20IO == 1) Value |= 0x80;
+   \   00002B   A287         MOV     C,0x80.7
+   \   00002D   5004         JNC     ??Ds18b20Read_1
+   \   00002F   EE           MOV     A,R6
+   \   000030   D2E7         SETB    0xE0 /* A   */.7
+   \   000032   FE           MOV     R6,A
+    129                  Delay_us(35);
+   \                     ??Ds18b20Read_1:
+   \   000033                ; Setup parameters for call to function Delay_us
+   \   000033   7A23         MOV     R2,#0x23
+   \   000035   7B00         MOV     R3,#0x0
+   \   000037   12....       LCALL   ??Delay_us?relay
+    130              } 
+   \   00003A   1F           DEC     R7
+   \   00003B   EF           MOV     A,R7
+   \   00003C   70D1         JNZ     ??Ds18b20Read_0
+    131              return Value;
+   \   00003E   EE           MOV     A,R6
+   \   00003F                REQUIRE ?Subroutine0
+   \   00003F                REQUIRE _A_P0
+   \   00003F                REQUIRE P0DIR
+   \   00003F                ; // Fall through to label ?Subroutine0
+    132          }
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   F9           MOV     R1,A
+   \   000001                REQUIRE ??Subroutine2_0
+   \   000001                ; // Fall through to label ??Subroutine2_0
+    133          
+    134          //ÎÂ¶È¶ÁÈ¡º¯Êý
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    135          unsigned char ReadDs18B20(void) 
+   \                     ReadDs18B20:
+    136          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+    137              unsigned char V1,V2;   //¶¨Òå¸ßµÍ8Î» »º³å
+    138              unsigned char temp;    //¶¨ÒåÎÂ¶È»º³å¼Ä´æÆ÷
+    139              
+    140              Ds18b20Initial();
+   \   000005                ; Setup parameters for call to function Ds18b20Initial
+   \   000005   12....       LCALL   ??Ds18b20Initial?relay
+    141              Ds18b20Write(0xcc);    // Ìø¹ý¶ÁÐòºÅÁÐºÅµÄ²Ù×÷
+   \   000008                ; Setup parameters for call to function Ds18b20Write
+   \   000008   79CC         MOV     R1,#-0x34
+   \   00000A   12....       LCALL   ??Ds18b20Write?relay
+    142              Ds18b20Write(0x44);    // Æô¶¯ÎÂ¶È×ª»»
+   \   00000D                ; Setup parameters for call to function Ds18b20Write
+   \   00000D   7944         MOV     R1,#0x44
+   \   00000F   12....       LCALL   ??Ds18b20Write?relay
+    143              
+    144              Ds18b20Initial();
+   \   000012                ; Setup parameters for call to function Ds18b20Initial
+   \   000012   12....       LCALL   ??Ds18b20Initial?relay
+    145              Ds18b20Write(0xcc);    //Ìø¹ý¶ÁÐòºÅÁÐºÅµÄ²Ù×÷ 
+   \   000015                ; Setup parameters for call to function Ds18b20Write
+   \   000015   79CC         MOV     R1,#-0x34
+   \   000017   12....       LCALL   ??Ds18b20Write?relay
+    146              Ds18b20Write(0xbe);    //¶ÁÈ¡ÎÂ¶È¼Ä´æÆ÷µÈ£¨¹²¿É¶Á9¸ö¼Ä´æÆ÷£© Ç°Á½¸ö¾ÍÊÇÎÂ¶È
+   \   00001A                ; Setup parameters for call to function Ds18b20Write
+   \   00001A   79BE         MOV     R1,#-0x42
+   \   00001C   12....       LCALL   ??Ds18b20Write?relay
+    147              
+    148              V1 = Ds18b20Read();    //µÍÎ»
+   \   00001F                ; Setup parameters for call to function Ds18b20Read
+   \   00001F   12....       LCALL   ??Ds18b20Read?relay
+   \   000022   E9           MOV     A,R1
+   \   000023   FE           MOV     R6,A
+    149              V2 = Ds18b20Read();    //¸ßÎ»
+    150              temp = ((V1 >> 4)+((V2 & 0x07)*16)); //×ª»»Êý¾Ý 
+    151          
+    152              return temp;
+   \   000024                ; Setup parameters for call to function Ds18b20Read
+   \   000024   12....       LCALL   ??Ds18b20Read?relay
+   \   000027   E9           MOV     A,R1
+   \   000028   5407         ANL     A,#0x7
+   \   00002A   C4           SWAP    A
+   \   00002B   F8           MOV     R0,A
+   \   00002C   EE           MOV     A,R6
+   \   00002D   C4           SWAP    A
+   \   00002E   540F         ANL     A,#0xf
+   \   000030   28           ADD     A,R0
+   \   000031   80..         SJMP    ?Subroutine0
+    153          }
+    154          
+    155          //ÎÂ¶È¶ÁÈ¡º¯Êý ´ø1Î»Ð¡ÊýÎ»
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    156          float floatReadDs18B20(void) 
+   \                     floatReadDs18B20:
+    157          {
+   \   000000   74F0         MOV     A,#-0x10
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 16
+   \   000005                ; Auto size: 0
+    158              unsigned char V1,V2;   //¶¨Òå¸ßµÍ8Î» »º³å
+    159              unsigned int temp;     //¶¨ÒåÎÂ¶È»º³å¼Ä´æÆ÷
+    160              float fValue;
+    161              Ds18b20Initial();
+   \   000005                ; Setup parameters for call to function Ds18b20Initial
+   \   000005   12....       LCALL   ??Ds18b20Initial?relay
+    162              Ds18b20Write(0xcc);    // Ìø¹ý¶ÁÐòºÅÁÐºÅµÄ²Ù×÷
+   \   000008                ; Setup parameters for call to function Ds18b20Write
+   \   000008   79CC         MOV     R1,#-0x34
+   \   00000A   12....       LCALL   ??Ds18b20Write?relay
+    163              Ds18b20Write(0x44);    // Æô¶¯ÎÂ¶È×ª»»
+   \   00000D                ; Setup parameters for call to function Ds18b20Write
+   \   00000D   7944         MOV     R1,#0x44
+   \   00000F   12....       LCALL   ??Ds18b20Write?relay
+    164              
+    165              Ds18b20Initial();
+   \   000012                ; Setup parameters for call to function Ds18b20Initial
+   \   000012   12....       LCALL   ??Ds18b20Initial?relay
+    166              Ds18b20Write(0xcc);    //Ìø¹ý¶ÁÐòºÅÁÐºÅµÄ²Ù×÷ 
+   \   000015                ; Setup parameters for call to function Ds18b20Write
+   \   000015   79CC         MOV     R1,#-0x34
+   \   000017   12....       LCALL   ??Ds18b20Write?relay
+    167              Ds18b20Write(0xbe);    //¶ÁÈ¡ÎÂ¶È¼Ä´æÆ÷µÈ£¨¹²¿É¶Á9¸ö¼Ä´æÆ÷£© Ç°Á½¸ö¾ÍÊÇÎÂ¶È
+   \   00001A                ; Setup parameters for call to function Ds18b20Write
+   \   00001A   79BE         MOV     R1,#-0x42
+   \   00001C   12....       LCALL   ??Ds18b20Write?relay
+    168              
+    169              V1 = Ds18b20Read();    //µÍÎ»
+   \   00001F                ; Setup parameters for call to function Ds18b20Read
+   \   00001F   12....       LCALL   ??Ds18b20Read?relay
+   \   000022   E9           MOV     A,R1
+   \   000023   F5..         MOV     ?V0 + 0,A
+    170              V2 = Ds18b20Read();    //¸ßÎ»
+    171              //temp = ((V1 >> 4)+((V2 & 0x07)*16)); //×ª»»Êý¾Ý 
+    172              temp=V2*0xFF+V1;
+    173              fValue = temp*0.0625;
+    174              
+    175              return fValue;
+   \   000025                ; Setup parameters for call to function Ds18b20Read
+   \   000025   12....       LCALL   ??Ds18b20Read?relay
+   \   000028   E9           MOV     A,R1
+   \   000029   75F0FF       MOV     B,#-0x1
+   \   00002C   A4           MUL     AB
+   \   00002D   25..         ADD     A,?V0 + 0
+   \   00002F   F5..         MOV     ?V0 + 0,A
+   \   000031   E5F0         MOV     A,B
+   \   000033   3400         ADDC    A,#0x0
+   \   000035   F5..         MOV     ?V0 + 1,A
+   \   000037   E4           CLR     A
+   \   000038   F5..         MOV     ?V0 + 2,A
+   \   00003A   F5..         MOV     ?V0 + 3,A
+   \   00003C   78..         MOV     R0,#?V0 + 0
+   \   00003E   12....       LCALL   ?UL_TO_FLT
+   \   000041   90....       MOV     DPTR,#__Constant_3d800000
+   \   000044   78..         MOV     R0,#?V0 + 4
+   \   000046   12....       LCALL   ?L_MOV_X
+   \   000049   78..         MOV     R0,#?V0 + 0
+   \   00004B   79..         MOV     R1,#?V0 + 4
+   \   00004D   12....       LCALL   ?FLT_MUL
+   \   000050   AA..         MOV     R2,?V0 + 0
+   \   000052   AB..         MOV     R3,?V0 + 1
+   \   000054   AC..         MOV     R4,?V0 + 2
+   \   000056   AD..         MOV     R5,?V0 + 3
+   \   000058   7F08         MOV     R7,#0x8
+   \   00005A   02....       LJMP    ?BANKED_LEAVE_XDATA
+    176          }
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     __Constant_3d800000:
+   \   000000   0000803D     DD 3D800000H
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Ds18b20Delay?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Ds18b20Delay
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Delay_us?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Delay_us
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Ds18b20InputInitial?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Ds18b20InputInitial
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Ds18b20OutputInitial?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Ds18b20OutputInitial
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Ds18b20Initial?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Ds18b20Initial
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Ds18b20Write?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Ds18b20Write
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??Ds18b20Read?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    Ds18b20Read
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??ReadDs18B20?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    ReadDs18B20
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??floatReadDs18B20?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    floatReadDs18B20
+
+   Maximum stack usage in bytes:
+
+   ISTACK PSTACK XSTACK Function
+   ------ ------ ------ --------
+       0      0     10  Delay_us
+       0      0      0  Ds18b20Delay
+       0      0     26  Ds18b20Initial
+                          0 0 10 -> Delay_us
+       0      0      0  Ds18b20InputInitial
+       0      0      0  Ds18b20OutputInitial
+       0      0     25  Ds18b20Read
+                          0 0  9 -> Delay_us
+       0      0     25  Ds18b20Write
+                          0 0  9 -> Delay_us
+       0      0      9  ReadDs18B20
+                          0 0  9 -> Ds18b20Initial
+                          0 0  9 -> Ds18b20Read
+                          0 0  9 -> Ds18b20Write
+       0      0     16  floatReadDs18B20
+                          0 0 16 -> Ds18b20Initial
+                          0 0 16 -> Ds18b20Read
+                          0 0 16 -> Ds18b20Write
+
+
+   Segment part sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       6  ??Delay_us?relay
+       6  ??Ds18b20Delay?relay
+       6  ??Ds18b20Initial?relay
+       6  ??Ds18b20InputInitial?relay
+       6  ??Ds18b20OutputInitial?relay
+       6  ??Ds18b20Read?relay
+       6  ??Ds18b20Write?relay
+       6  ??ReadDs18B20?relay
+       5  ??Subroutine2_0
+       6  ??floatReadDs18B20?relay
+       1  ?Subroutine0
+      10  ?Subroutine1
+      42  Delay_us
+      30  Ds18b20Delay
+      99  Ds18b20Initial
+       6  Ds18b20InputInitial
+       6  Ds18b20OutputInitial
+      63  Ds18b20Read
+      58  Ds18b20Write
+       1  P0DIR
+      51  ReadDs18B20
+       1  T1CC0H
+       1  T1CC0L
+       1  T1CNTH
+       1  T1CNTL
+       1  T1CTL
+       1  _A_P0
+       4  __Constant_3d800000
+      93  floatReadDs18B20
+
+ 
+ 464 bytes in segment BANKED_CODE
+  54 bytes in segment BANK_RELAYS
+   7 bytes in segment SFR_AN
+   4 bytes in segment XDATA_ROM_C
+ 
+ 518 bytes of CODE  memory
+   0 bytes of CONST memory (+ 4 bytes shared)
+   0 bytes of DATA  memory (+ 7 bytes shared)
+
+Errors: none
+Warnings: none

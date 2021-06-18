@@ -1,0 +1,5 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\oled.obj" 
+TO ".\Objects\PH_caiji" 
+PRINT(".\Listings\PH_caiji.m51") RAMSIZE(256) 

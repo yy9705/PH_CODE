@@ -1,0 +1,236 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2021 16:51:55 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE User\main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /********************(C) COPRIGHT 2019 Crownto electronic **************************
+   2           * 文件名  ：main.c
+   3           * 描述    ：        
+   4           * 硬件连接：
+   5           * OLED :CS -> P0.3; RST -> P0.1; DC -> P0.2;SCL -> P2.2;SDIN -> P0.0;
+   6           *         D0~D7 -> P0口
+   7           * PH模块: VCC -> 5V; GND -> GND; PO -> P1.1;
+   8           *
+   9           * 功能描述：测量PH值液晶显示；
+  10                       串口接收测量所得的PH值（波特率9600）；
+  11           *           可连接上位机显示PH值；
+  12           * 作者    ：智男电子
+  13          **********************************************************************************/
+  14          
+  15          #include <STC12C5A60S2.h>
+  16          #include <intrins.h>
+  17          #include "oled.h"
+  18          #define uchar unsigned char
+  19          #define uint  unsigned int
+  20          
+  21          #define MAIN_Fosc   11059200L //定义主时钟, 模拟串口和和延时会自动适应。5~35MHZ  22118400L 
+  22          
+  23          
+  24          #define ADC_OFF() ADC_CONTR = 0
+  25          #define ADC_ON    (1 << 7)
+  26          #define ADC_90T   (3 << 5)
+  27          #define ADC_180T  (2 << 5)
+  28          #define ADC_360T  (1 << 5)
+  29          #define ADC_540T  0
+  30          #define ADC_FLAG  (1 << 4)  //软件清0
+  31          #define ADC_START (1 << 3)  //自动清0
+  32          #define ADC_CH0   0
+  33          #define ADC_CH1   1
+  34          #define ADC_CH2   2
+  35          #define ADC_CH3   3
+  36          #define ADC_CH4   4
+  37          #define ADC_CH5   5
+  38          #define ADC_CH6   6
+  39          #define ADC_CH7   7
+  40          
+  41          /**************变量定义***************************/
+  42          float PH=0.0,voltage;
+  43          float PH_value=0.0,voltage_value;
+  44          
+  45          unsigned char disbuff[18]={0}; 
+  46          void DelayUs(unsigned int time);   //延时子函数
+  47          void Delay1(unsigned int time);    //延时主程序
+  48          void  delay_ms_AD(unsigned char ms);
+  49          
+  50          uint  adc10_start(uchar channel); //channel = 0~7
+  51          unsigned char disbuff1[5] ={0};
+  52          uint i;
+  53          
+  54          void delay_1s()   //延时1s
+C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2021 16:51:55 PAGE 2   
+
+  55          {
+  56   1        unsigned char i, j, k;
+  57   1      
+  58   1        _nop_();
+  59   1        i = 8;
+  60   1        j = 1;
+  61   1        k = 243;
+  62   1        do
+  63   1        {
+  64   2          do
+  65   2          {
+  66   3            while (--k);
+  67   3          } while (--j);
+  68   2        } while (--i);
+  69   1      }
+  70          /*
+  71           * 函数名：Get_Voltage_Value
+  72           * 描述  ：获取电压值转换为PH
+  73          
+  74           */
+  75          void PH_Value_Conversion()
+  76          {
+  77   1          PH=(PH*5)/1024;
+  78   1          PH_value=-5.887*PH+21.677;
+  79   1        
+  80   1          if((PH_value<=0)){PH_value=0;}
+  81   1          if((PH_value>14)){PH_value=14.1;}
+  82   1          
+  83   1          /*显示酸碱度*/
+  84   1          disbuff[0]=(int)(PH_value*100)/1000+'0';
+  85   1          disbuff[1]=(int)(PH_value*100)%1000/100+'0';  
+  86   1          disbuff[2]='.';
+  87   1          disbuff[3]=(int)(PH_value*100)%100/10+'0';
+  88   1          disbuff[4]=(int)(PH_value*100)%10+'0';
+  89   1          OLED_ShowChar(24,2,disbuff[0]);//显示ASCII字符
+  90   1          OLED_ShowChar(33,2,disbuff[1]);//显示ASCII字符
+  91   1          OLED_ShowChar(42,2,disbuff[2]);//显示ASCII字符
+  92   1          OLED_ShowChar(51,2,disbuff[3]);//显示ASCII字符  
+  93   1          OLED_ShowChar(60,2,disbuff[4]);//显示ASCII字符    
+  94   1      }
+  95          void StartUART( void )
+  96          {               //波特率9600
+  97   1           SCON = 0x50;
+  98   1           TMOD = 0x20;
+  99   1           TH1 = 0xFD;
+ 100   1           TL1 = 0xFD; 
+ 101   1           PCON = 0x00;
+ 102   1           TR1 = 1;
+ 103   1      }
+ 104          //**********通过串口将接收到数据发送给PC端**************
+ 105          void R_S_Byte(uchar R_Byte)
+ 106          { 
+ 107   1         SBUF = R_Byte;  
+ 108   1           while( TI == 0 );        //查询法
+ 109   1           TI = 0;    
+ 110   1      }
+ 111          /*
+ 112           * 函数名：main
+ 113           * 描述  ：主函数
+ 114           * 输入  ：无
+ 115           * 输出  ：无
+ 116           */
+C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2021 16:51:55 PAGE 3   
+
+ 117          void main(void)
+ 118          { 
+ 119   1        StartUART();
+ 120   1        OLED_Init();      //初始化OLED  
+ 121   1        OLED_Clear()    ; 
+ 122   1      
+ 123   1        P1ASF = 0x07;     //12C5A60AD/S2系列模拟输入(AD)选择
+ 124   1        ADC_CONTR = ADC_360T | ADC_ON;
+ 125   1        OLED_ShowCHinese(0,0,0);
+ 126   1        OLED_ShowCHinese(18,0,1);
+ 127   1        OLED_ShowCHinese(36,0,2);
+ 128   1        OLED_ShowCHinese(54,0,3);
+ 129   1        OLED_ShowCHinese(72,0,4);
+ 130   1        OLED_ShowCHinese(90,0,5);
+ 131   1        OLED_ShowCHinese(108,0,6);
+ 132   1        OLED_ShowString(0,2,"PH:");   
+ 133   1        while(1)
+ 134   1        {
+ 135   2            PH = adc10_start(1);        
+ 136   2            PH_Value_Conversion();
+ 137   2                for(i=0;i<5;i++)
+ 138   2              {
+ 139   3                R_S_Byte(disbuff[i]);
+ 140   3              } 
+ 141   2              R_S_Byte('\r');//发送回车换行符
+ 142   2              R_S_Byte('\n');
+ 143   2              delay_1s();
+ 144   2        }
+ 145   1      }
+ 146            
+ 147          
+ 148          ///********************* 做一次ADC转换 *******************/
+ 149          uint  adc10_start(uchar channel)  //channel = 0~7
+ 150          {
+ 151   1        uint  adc;
+ 152   1        uchar i;
+ 153   1      
+ 154   1        ADC_RES = 0;
+ 155   1        ADC_RESL = 0;
+ 156   1      
+ 157   1        ADC_CONTR = (ADC_CONTR & 0xe0) | ADC_START | channel; 
+ 158   1      
+ 159   1        i = 250;
+ 160   1        do{
+ 161   2          if(ADC_CONTR & ADC_FLAG)
+ 162   2          {
+ 163   3            ADC_CONTR &= ~ADC_FLAG;
+ 164   3            adc = (uint)ADC_RES;
+ 165   3            adc = (adc << 2) | (ADC_RESL & 3);
+ 166   3            return  adc;
+ 167   3          }
+ 168   2        }while(--i);
+ 169   1        return  1024;
+ 170   1      }
+ 171          
+ 172          //========================================================================
+ 173          // 函数: void  delay_ms(unsigned char ms)
+ 174          // 描述: 延时函数。
+ 175          // 参数: ms,要延时的ms数.
+ 176          // 返回: none.
+ 177          // 版本: VER1.0
+ 178          // 日期: 2010-12-15
+C51 COMPILER V9.60.0.0   MAIN                                                              06/11/2021 16:51:55 PAGE 4   
+
+ 179          // 备注: 
+ 180          //========================================================================
+ 181          void  delay_ms_AD(unsigned char ms)
+ 182          {
+ 183   1           unsigned int i;
+ 184   1         do{
+ 185   2              i = MAIN_Fosc / 14000;
+ 186   2            while(--i)  ;   //14T per loop
+ 187   2           }while(--ms);
+ 188   1      }
+ 189          
+ 190          
+ 191          //延时函数//
+ 192          void Delay1(unsigned int time)
+ 193          {
+ 194   1          unsigned int timeCounter = 0;
+ 195   1        for (timeCounter = time;timeCounter > 0 ;timeCounter --)
+ 196   1          DelayUs(255);
+ 197   1      }
+ 198          
+ 199          void DelayUs(unsigned int time)
+ 200          {
+ 201   1        unsigned int timeCounter = 0;
+ 202   1        for (timeCounter = 0;timeCounter < time;timeCounter ++)
+ 203   1          _nop_();
+ 204   1      }
+ 205          
+ 206          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    648    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     41       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
