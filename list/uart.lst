@@ -1,0 +1,142 @@
+C51 COMPILER V9.60.0.0   UART                                                              07/01/2021 15:16:08 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN .\list\uart.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE uart.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\list\uart.lst
+                    -) TABS(2) OBJECT(.\list\uart.obj)
+
+line level    source
+
+   1          /******************************************************************
+   2            作者：神秘藏宝室
+   3            店铺：ILoveMCU.taobao.com
+   4            最终解释权归原作者所有，鄙视其他店铺不劳而获的抄袭行为！
+   5          ******************************************************************/
+   6          #include "uart.h"
+   7          
+   8          
+   9          unsigned char RX_Count = 0;
+  10          
+  11          
+  12          bit busy;
+  13          char wptr;
+  14          char rptr;
+  15          char buffer[16];
+  16          
+  17          void Uart_Init()                     
+  18          {
+  19   1      //  SCON = 0X50;  //UART方式1；8位UART
+  20   1      //  REN  = 1;     //允许串行口接收数据
+  21   1      //  PCON = 0x00;  //SMOD=0;波特率不加倍
+  22   1      //  TMOD = 0x20;  //T1方式2，用于产生波特率
+  23   1      //  TH1  = 0xFD;  //装初值
+  24   1      //  TL1  = 0xFD;
+  25   1      //  TR1  = 1;     //启动定时器1
+  26   1      //  EA   = 1;     //打开全局中断控制
+  27   1      //  ES   = 1;     //打开串行口中断
+  28   1      
+  29   1        SCON = 0x50;
+  30   1        T2L = BRT;
+  31   1        T2H = BRT >> 8;
+  32   1        
+  33   1        AUXR = 0x15;
+  34   1        wptr = 0x00;
+  35   1        rptr = 0x00;
+  36   1        busy = 0;
+  37   1        
+  38   1        ES = 1;
+  39   1        EA = 1;
+  40   1        
+  41   1      }
+  42          
+  43          void UartPrintf(unsigned char *p)       //发送字符串
+  44          { 
+  45   1        while (*p)
+  46   1        {
+  47   2          UartPrintASCII(*p++);
+  48   2        }  
+  49   1      }
+  50          
+  51          void UartPrintASCII(unsigned char dat)        //发送一个字符
+  52          { 
+  53   1          while (busy);
+  54   1        busy = 1;
+C51 COMPILER V9.60.0.0   UART                                                              07/01/2021 15:16:08 PAGE 2   
+
+  55   1        SBUF = dat;   
+  56   1      }
+  57          
+  58          
+  59          //重写putchar函数
+  60          char putchar(char c)
+  61          {
+  62   1          UartPrintASCII(c);
+  63   1          return c;
+  64   1      }
+  65          
+  66          
+  67          //void RECEIVE_DATA(void) interrupt 4 using 3       
+  68          //{ 
+  69          //  unsigned char temp = 0;
+  70          //  char i = 0;
+  71          //  ES=0;
+  72          //  temp = SBUF;
+  73          //  RI = 0;
+  74          //  
+  75          //  ES=1; 
+  76          //}
+  77          
+  78          void UartIsr() interrupt 4
+  79          {
+  80   1        if (TI)
+  81   1        {
+  82   2          TI = 0;
+  83   2          busy = 0;
+  84   2        }
+  85   1        if (RI)
+  86   1        {
+  87   2          RI = 0;
+  88   2          buffer[wptr++] = SBUF;
+  89   2          wptr &= 0x0f;
+  90   2        }
+  91   1      }
+  92          
+  93          
+  94          
+  95          
+  96          
+  97          
+  98          
+  99          
+ 100          
+ 101          
+ 102          
+ 103          
+ 104          
+ 105          
+ 106          
+ 107          
+ 108          
+ 109          
+ 110          
+ 111          
+ 112          
+ 113          
+ 114          
+
+
+C51 COMPILER V9.60.0.0   UART                                                              07/01/2021 15:16:08 PAGE 3   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    119    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     19       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
